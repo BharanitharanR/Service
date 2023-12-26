@@ -1,5 +1,6 @@
 package com.batty.framework.service.datastore;
 
+import com.batty.framework.service.interfaces.DatastoreInterface;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.*;
@@ -17,10 +18,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Filter;
 
-import static com.mongodb.client.model.Filters.eq;
 
 @Component
 @EnableAutoConfiguration(exclude={MongoAutoConfiguration.class})
@@ -60,11 +58,6 @@ public class CheckDBConnection {
         boolean returnStatus = false;
         try
         {
-            // Bson schema = eq("userId","String");
-
-           // Specify validation options (optional)
-             // ValidationOptions options = new ValidationOptions().validator(schema);
-
             this.database.createCollection(collectionName);
             returnStatus = true;
 
@@ -84,10 +77,10 @@ public class CheckDBConnection {
         try {
             this.client = MongoClients.create(dbConnectionString);
             this.database  = this.client.getDatabase(dbName);
-            //  attempt a create collection
+
             log.info("Collection status: " +  ( (createCollection()) ? "Collection created":"Collection exists"));
             this.collection = this.database.getCollection(collectionName);
-            setupCollectionIndexes();
+
 
         }
         catch(Exception ignored) {
@@ -95,47 +88,11 @@ public class CheckDBConnection {
         }
     }
 
-    /* @javadoc
-    *   creates a indexes for this collection
-    */
-    private void setupCollectionIndexes() {
-        try
-        {
-            // Bson index = eq("userId", 1);
-            Document index = new Document();
-            index.put("userId",1);
-            // index.append("lastModifiedDate",1);
-            IndexOptions indexOptions = new IndexOptions().expireAfter(60L, TimeUnit.SECONDS).unique(true);
-            String indexCreated = this.collection.createIndex(index, indexOptions);
-            index.clear();
-            index.put("lastModifiedTimeStamp",1);
-            indexOptions = new IndexOptions();
-            indexCreated = this.collection.createIndex(index, indexOptions);
-            log.info("Index created :"+indexCreated);
-        }
-        catch(Exception e)
-        {
-            log.info("failed to create index:"+ e);
-        }
-
-
+    public void createIndex(Document doc,IndexOptions idx) {
+        this.collection.createIndex(doc, idx);
     }
 
-    public void insertData(String userId) {
-        try
-        {
-            Document doc = new Document();
-            doc.put("userId",userId);
-            InsertOneResult result = this.insertOne(doc);
-            log.info( "data inserted :"+result.wasAcknowledged());
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-            // log.info("Insert exception :"+ e.);
-        }
-
-    }
-
+    // Exposed framework function to insert a doc
     public InsertOneResult insertOne(Document doc)
     {
         InsertOneResult result = null;
