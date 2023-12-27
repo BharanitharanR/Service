@@ -69,7 +69,7 @@ public class DatastoreImpl implements DatastoreInterface {
             status =  this.datastore.findOne(doc);
         }
         catch(Exception e) {
-
+            status = "empty";
         }
         finally {
             return status;
