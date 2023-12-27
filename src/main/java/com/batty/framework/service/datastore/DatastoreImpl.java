@@ -1,8 +1,6 @@
 package com.batty.framework.service.datastore;
 
 import com.batty.framework.service.interfaces.DatastoreInterface;
-import com.mongodb.client.model.IndexOptions;
-import com.mongodb.client.result.InsertOneResult;
 import jakarta.annotation.PostConstruct;
 import org.bson.Document;
 import org.slf4j.Logger;
@@ -18,7 +16,7 @@ public class DatastoreImpl implements DatastoreInterface {
     protected Logger log = LoggerFactory.getLogger(DatastoreImpl.class);
 
     @Autowired
-    protected CheckDBConnection datastore;
+    protected DatabaseHandler datastore;
 
     @Autowired
     protected DatastoreUtil utils;
@@ -47,15 +45,34 @@ public class DatastoreImpl implements DatastoreInterface {
         }
     }
 
-    public void insertData(String userId) {
+    public boolean insertData(String userId) {
+
         try
         {
             Document doc = new Document();
             doc.put("userId",userId);
-            this.datastore.insertOne(doc);
+            return this.datastore.insertOne(doc) ;
         }
         catch(Exception e) {
             e.printStackTrace();
+            return false;
+        }
+
+    }
+
+    public Object findUser(String userId) {
+        Object status = null;
+        try
+        {
+            Document doc = new Document();
+            doc.put("userId",userId);
+            status =  this.datastore.findOne(doc);
+        }
+        catch(Exception e) {
+
+        }
+        finally {
+            return status;
         }
 
     }

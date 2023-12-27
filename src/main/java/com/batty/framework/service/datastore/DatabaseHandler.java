@@ -1,13 +1,11 @@
 package com.batty.framework.service.datastore;
 
-import com.batty.framework.service.interfaces.DatastoreInterface;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.*;
 import com.mongodb.client.result.InsertOneResult;
 import jakarta.annotation.PostConstruct;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,12 +16,13 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 
 import java.util.Date;
+import java.util.List;
 
 
 @Component
 @EnableAutoConfiguration(exclude={MongoAutoConfiguration.class})
-public class CheckDBConnection {
-    protected Logger log = LoggerFactory.getLogger(CheckDBConnection.class);
+public class DatabaseHandler {
+    protected Logger log = LoggerFactory.getLogger(DatabaseHandler.class);
     private boolean isDBConnected;
 
     protected MongoClient client;
@@ -93,20 +92,40 @@ public class CheckDBConnection {
     }
 
     // Exposed framework function to insert a doc
-    public InsertOneResult insertOne(Document doc)
+    public boolean insertOne(Document doc)
     {
+        boolean status = false;
         InsertOneResult result = null;
         try {
             doc.append("lastModifiedTimeStamp", new Date());
             result = this.collection.insertOne(doc);
+            if(result.getInsertedId() != null ) { status = true; }
+            log.info("is inserted:"+result.getInsertedId());
         }
         catch(Exception ignored)
         {
-
+            status = false;
         }
         finally
         {
-            return result;
+            return status;
+        }
+    }
+
+    public Object findOne(Document doc)
+    {
+        Document response = null;
+        try
+        {
+            response = (Document) this.collection.find(doc).first();
+            if(response != null ) {
+                System.out.println("_id: " + response.getObjectId("_id")
+                        + ", name: " + response.getString("userId"));
+            }
+        } catch(Exception e) {
+            log.info("find error :"+e);
+        } finally {
+            return response;
         }
     }
 

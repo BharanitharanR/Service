@@ -1,6 +1,5 @@
 package com.batty.framework.service;
 
-import com.batty.framework.service.datastore.CheckDBConnection;
 import com.batty.framework.service.datastore.DatastoreImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,8 +14,19 @@ public class RestService
     @Autowired
     protected DatastoreImpl dbConnection;
     @GetMapping("/home/addUser/{userId}")
-    public void addUser(@PathVariable  String userId) {
-        dbConnection.insertData(userId);
+    public String addUser(@PathVariable  String userId) {
+        if( dbConnection.insertData(userId) )
+        {
+            return "Success";
+        } else {
+            return "Failed";
+        }
 
     }
+
+    @GetMapping("/home/findUser/{userId}")
+    public Object findUser(@PathVariable  String userId) {
+        return dbConnection.findUser(userId);
+    }
+
 }
