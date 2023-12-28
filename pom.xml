@@ -59,7 +59,6 @@
 			<artifactId>docker-maven-plugin</artifactId>
 			<version>0.43.4</version>
 		</dependency>
-
 	</dependencies>
 	<build>
 		<plugins>
@@ -76,7 +75,6 @@
 							<name>bharani3ran01/servicesrepo:service</name>
 							<alias>dockerfile</alias>
 							<build>
-								<!-- filter>@</filter-->
 								<contextDir>${project.basedir}</contextDir>
 							</build>
 							<run>
@@ -86,9 +84,23 @@
 							</run>
 						</image>
 					</images>
+					<skipPush>false</skipPush>
 				</configuration>
+				<executions>
+					<execution>
+						<id>buildDock</id>
+						<goals>
+							<goal>build</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>pushDock</id>
+						<goals>
+							<goal>push</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
-
 </project>
