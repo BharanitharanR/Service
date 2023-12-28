@@ -17,6 +17,7 @@
 		<java.version>21</java.version>
 		<project.id>service</project.id>
 		<JAR_FILE>${project.basedir}/target/${artifactId}-${version}.jar</JAR_FILE>
+		<docker.repo>bharani3ran01/servicesrepo</docker.repo>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -70,9 +71,10 @@
 				<groupId>io.fabric8</groupId>
 				<artifactId>docker-maven-plugin</artifactId>
 				<configuration>
+					<skipPush>false</skipPush>
 					<images>
 						<image>
-							<name>bharani3ran01/servicesrepo:service</name>
+							<name>${docker.repo}:service</name>
 							<alias>dockerfile</alias>
 							<build>
 								<contextDir>${project.basedir}</contextDir>
@@ -84,17 +86,19 @@
 							</run>
 						</image>
 					</images>
-					<skipPush>false</skipPush>
+
 				</configuration>
 				<executions>
 					<execution>
 						<id>buildDock</id>
+						<phase>post-integration-test</phase>
 						<goals>
 							<goal>build</goal>
 						</goals>
 					</execution>
 					<execution>
 						<id>pushDock</id>
+						<phase>post-integration-test</phase>
 						<goals>
 							<goal>push</goal>
 						</goals>
