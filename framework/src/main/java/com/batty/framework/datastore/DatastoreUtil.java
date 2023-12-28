@@ -1,6 +1,6 @@
-package com.batty.framework.service.datastore;
+package com.batty.framework.datastore;
 
-import com.batty.framework.service.interfaces.DatastoreInterface;
+import com.batty.framework.interfaces.DatastoreInterface;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;

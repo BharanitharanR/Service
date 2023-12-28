@@ -1,4 +1,4 @@
-package com.batty.framework.service.interfaces;
+package com.batty.framework.interfaces;
 
 import org.springframework.stereotype.Component;
 

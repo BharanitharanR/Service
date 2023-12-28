@@ -1,6 +1,6 @@
-package com.batty.framework.service;
+package com.batty.service;
 
-import com.batty.framework.service.datastore.DatastoreImpl;
+import com.batty.service.datastore.DatastoreImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,4 +1,4 @@
-package com.batty.framework.service.datastore;
+package com.batty.framework.datastore;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
