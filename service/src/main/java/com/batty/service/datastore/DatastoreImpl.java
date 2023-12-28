@@ -12,7 +12,7 @@ import com.batty.framework.datastore.DatabaseHandler;
 import com.batty.framework.datastore.DatastoreUtil;
 import java.util.concurrent.TimeUnit;
 
-@Component
+@Component("ServiceDataStoreImpl")
 public class DatastoreImpl implements DatastoreInterface {
 
     protected Logger log = LoggerFactory.getLogger(DatastoreImpl.class);
@@ -36,7 +36,7 @@ public class DatastoreImpl implements DatastoreInterface {
         try
         {
             Document index = new Document();
-            index.put("userId",1);
+            index.put("name",1);
             this.datastore.createIndex(index, this.utils.getOptions().unique(true));
             index.clear();
             index.put("lastModifiedTimeStamp",1);
@@ -53,7 +53,7 @@ public class DatastoreImpl implements DatastoreInterface {
         try
         {
             Document doc = new Document();
-            doc.put("userId",userId);
+            doc.put("name",userId);
             return this.datastore.insertOne(doc) ;
         }
         catch(Exception e) {
@@ -68,7 +68,7 @@ public class DatastoreImpl implements DatastoreInterface {
         try
         {
             Document doc = new Document();
-            doc.put("userId",userId);
+            doc.put("name",userId);
             status =  this.datastore.findOne(doc);
         }
         catch(Exception e) {
