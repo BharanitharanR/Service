@@ -41,12 +41,6 @@ public class RestService implements HikeListApi
 
     }
 
-
-    public Object findUser(@PathVariable  String userId) {
-        return dbConnection.findUser(userId);
-
-    }
-
     @Override
     public ResponseEntity<RTPHikers> getUser(String userId) {
         RTPHikers response = new RTPHikers();

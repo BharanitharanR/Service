@@ -64,7 +64,7 @@
 		</dependency>
 	</dependencies>
 	<modules>
-		<module>framework</module>
+		<!-- <module>framework</module> -->
 		<module>service</module>
 	</modules>
 </project>
