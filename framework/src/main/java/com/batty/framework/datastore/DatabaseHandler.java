@@ -1,5 +1,6 @@
 package com.batty.framework.datastore;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.*;
@@ -8,6 +9,7 @@ import jakarta.annotation.PostConstruct;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
@@ -31,6 +33,7 @@ public class DatabaseHandler {
 
     protected MongoCollection collection;
 
+
     @Value("${mongodb.atlas.connection}")
     public String dbConnectionString;
 
@@ -40,6 +43,9 @@ public class DatabaseHandler {
     @Value("${mongodb.collection.name}")
     public String collectionName;
 
+
+    @Autowired
+    protected ObjectMapper objectMapper;
 
     @PostConstruct
     public void initialize()
@@ -127,6 +133,18 @@ public class DatabaseHandler {
         } finally {
             return response;
         }
+    }
+
+    public <T> T findOne(Document doc, Class<T> clazz) {
+        try {
+            Document response = (Document) this.collection.find(doc).first();
+            if (response != null) {
+                return objectMapper.readValue(response.toJson(), clazz);
+            }
+        } catch (Exception e) {
+            log.info("find error: " + e);
+        }
+        return null;
     }
 
 }

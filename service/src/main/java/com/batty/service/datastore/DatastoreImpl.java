@@ -2,6 +2,7 @@ package com.batty.service.datastore;
 
 
 import com.batty.framework.interfaces.DatastoreInterface;
+import com.batty.service.model.ServiceCollection;
 import jakarta.annotation.PostConstruct;
 import org.bson.Document;
 import org.slf4j.Logger;
@@ -48,12 +49,12 @@ public class DatastoreImpl implements DatastoreInterface {
         }
     }
 
-    public boolean insertData(String userId) {
+    public boolean insertData(Document doc) {
 
         try
         {
-            Document doc = new Document();
-            doc.put("name",userId);
+            // Document doc = new Document();
+            // doc.put("name",userId);
             return this.datastore.insertOne(doc) ;
         }
         catch(Exception e) {
@@ -63,19 +64,25 @@ public class DatastoreImpl implements DatastoreInterface {
 
     }
 
-    public Object findUser(String userId) {
+    public ServiceCollection findUser(String userId)
+    {
         Object status = null;
+        ServiceCollection coll = new ServiceCollection();
         try
         {
             Document doc = new Document();
-            doc.put("name",userId);
-            status =  this.datastore.findOne(doc);
+            doc.put("userId",userId);
+            //doc.put("name",userId);
+            coll = this.datastore.findOne(doc,ServiceCollection.class);
+            log.info("Data from DB: "+coll.toString());
+            return coll;
+
         }
-        catch(Exception e) {
+        catch(Exception e)
+        {
+            log.info("Error while fetch"+ e);
             status = "empty";
-        }
-        finally {
-            return status;
+            return null;
         }
 
     }

@@ -1,0 +1,93 @@
+openapi: "3.0.2"
+info:
+  title: Non-oAuth Scopes example
+  description: sample
+  version: 1.0.0
+paths:
+  /HikeList/user/{userID}:
+    post:
+      summary: Get the details of the specific user
+      operationId: addUser
+      parameters:
+        - name: userID
+          in: path
+          required: true
+          description: The userID for which the RTPHIkers details are needed
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RTPHikers'
+        "400":
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    get:
+      summary: Get the details of the specific user
+      operationId: getUser
+      parameters:
+        - name: userID
+          in: path
+          required: true
+          description: The userID for which the RTPHIkers details are needed
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RTPHikers'
+        "400":
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    RTPHikers:
+      type: "object"
+      properties:
+        userID:
+          type: string
+        name:
+          type: string
+
+    Error:
+      type: "object"
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+
+    serviceCollection:
+      type: "object"
+      properties:
+        userId:
+          type: string
+        name:
+          type: string
+        lastModifiedTimeStamp:
+          type: object
+          $ref: '#/components/schemas/MongoDate'
+
+    MongoDate:
+      type: "object"
+      properties:
+        $date:
+          type: string
+          format: time

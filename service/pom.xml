@@ -20,6 +20,9 @@
 		<JAR_FILE>${project.basedir}/target/${artifactId}-${version}.jar</JAR_FILE>
 		<docker.repo>bharani3ran01/servicesrepo</docker.repo>
 		<docker.image.tag>${version}</docker.image.tag>
+		<springfox.version>2.9.2</springfox.version>
+		<swagger-ui.version>4.15.5</swagger-ui.version>
+		<doNotPushToDHub>true</doNotPushToDHub>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -30,11 +33,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-<!--		<dependency>
-			<groupId>com.batty.framework</groupId>
-			<artifactId>framework</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -71,7 +69,54 @@
 			<artifactId>framework</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<!-- <dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>4.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>javax.annotation-api</artifactId>
+			<version>1.3.2</version>
+		</dependency> -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.6.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.6.0</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>2.0.1.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>io.swagger</groupId>
+			<artifactId>swagger-annotations</artifactId>
+			<version>1.6.12</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
+		<dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>javax.annotation-api</artifactId>
+			<version>1.3.2</version>
+		</dependency>
 
+		<dependency>
+			<groupId>org.openapitools</groupId>
+			<artifactId>jackson-databind-nullable</artifactId>
+			<version>0.2.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>4.0.1</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -83,7 +128,7 @@
 				<groupId>io.fabric8</groupId>
 				<artifactId>docker-maven-plugin</artifactId>
 				<configuration>
-					<skipPush>false</skipPush>
+					<skipPush>${doNotPushToDHub}</skipPush>
 					<images>
 						<image>
 							<name>${docker.repo}:${version}</name>
@@ -114,6 +159,34 @@
 						<goals>
 							<goal>push</goal>
 						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.openapitools</groupId>
+				<artifactId>openapi-generator-maven-plugin</artifactId>
+				<version>5.3.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<generatorName>spring</generatorName>
+							<inputSpec>${project.basedir}/service.yaml</inputSpec>
+							<configOptions>
+								<interfaceOnly>true</interfaceOnly>
+								<skipDefaultInterface>true</skipDefaultInterface>
+
+							</configOptions>
+							<generateSupportingFiles>false</generateSupportingFiles>
+							<generatorName>spring</generatorName>
+							<packageName>com.batty.service</packageName>
+							<apiPackage>com.batty.service.api</apiPackage>
+							<modelPackage>com.batty.service.model</modelPackage>
+							<typeMappings>time=Date</typeMappings>
+							<importMappings>Date=java.util.Date</importMappings>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
