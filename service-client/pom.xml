@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.batty</groupId>
-	<artifactId>service</artifactId>
+	<artifactId>service-client</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>service</name>
-	<description>Framework attempt</description>
+	<name>service-client</name>
+	<description>service client</description>
 
 	<properties>
 		<java.version>21</java.version>
@@ -117,50 +117,35 @@
 			<artifactId>javax.servlet-api</artifactId>
 			<version>4.0.1</version>
 		</dependency>
+		<dependency>
+			<groupId>com.batty</groupId>
+			<artifactId>service</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>logging-interceptor</artifactId>
+			<version>3.12.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.threeten/threetenbp -->
+		<dependency>
+			<groupId>org.threeten</groupId>
+			<artifactId>threetenbp</artifactId>
+			<version>1.6.8</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.gsonfire/gson-fire -->
+		<dependency>
+			<groupId>io.gsonfire</groupId>
+			<artifactId>gson-fire</artifactId>
+			<version>1.9.0</version>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>io.fabric8</groupId>
-				<artifactId>docker-maven-plugin</artifactId>
-				<configuration>
-					<skipPush>${doNotPushToDHub}</skipPush>
-					<images>
-						<image>
-							<name>${docker.repo}:${version}</name>
-							<alias>dockerfile</alias>
-							<build>
-								<contextDir>${project.basedir}</contextDir>
-							</build>
-							<run>
-								<ports>
-									<port>8080:8080</port>
-								</ports>
-							</run>
-						</image>
-					</images>
-
-				</configuration>
-				<executions>
-					<execution>
-						<id>buildDock</id>
-						<phase>post-integration-test</phase>
-						<goals>
-							<goal>build</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>pushDock</id>
-						<phase>post-integration-test</phase>
-						<goals>
-							<goal>push</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.openapitools</groupId>
@@ -172,19 +157,11 @@
 							<goal>generate</goal>
 						</goals>
 						<configuration>
-							<generatorName>spring</generatorName>
+							<generatorName>java</generatorName>
 							<inputSpec>service.yaml</inputSpec>
 							<configOptions>
-								<interfaceOnly>true</interfaceOnly>
-								<skipDefaultInterface>true</skipDefaultInterface>
+								<sourceFolder>src/gen/java/main</sourceFolder>
 							</configOptions>
-							<generateSupportingFiles>false</generateSupportingFiles>
-							<generatorName>spring</generatorName>
-							<packageName>com.batty.service</packageName>
-							<apiPackage>com.batty.service.api</apiPackage>
-							<modelPackage>com.batty.service.model</modelPackage>
-							<typeMappings>time=Date</typeMappings>
-							<importMappings>Date=java.util.Date</importMappings>
 						</configuration>
 					</execution>
 				</executions>

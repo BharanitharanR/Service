@@ -66,5 +66,6 @@
 	<modules>
 		<!-- <module>framework</module> -->
 		<module>service</module>
+		<module>service-client</module>
 	</modules>
 </project>
