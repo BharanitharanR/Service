@@ -26,6 +26,7 @@ public class RestService implements HikeListApi
             Document servicecollection =  new Document();
             servicecollection.put("userId",userId);
             servicecollection.put("name",userId);
+            log.info("Collection");
             if (dbConnection.insertData(servicecollection)) {
                 response.setUserID(userId);
                 response.setName(userId);
