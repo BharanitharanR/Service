@@ -9,16 +9,16 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.batty</groupId>
-	<artifactId>service-client</artifactId>
+	<artifactId>service-it</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>service-client</name>
-	<description>service client</description>
-	<packaging>jar</packaging>
+	<name>serviceit</name>
+	<description>service it attempt</description>
+
 	<properties>
 		<java.version>21</java.version>
-		<project.id>service-client</project.id>
+		<project.id>serviceit</project.id>
 		<JAR_FILE>${project.basedir}/target/${artifactId}-${version}.jar</JAR_FILE>
-		<docker.repo>bharani3ran01/servicesrepo</docker.repo>
+		<docker.repo>bharani3ran01/servicesit</docker.repo>
 		<docker.image.tag>${version}</docker.image.tag>
 		<springfox.version>2.9.2</springfox.version>
 		<swagger-ui.version>4.15.5</swagger-ui.version>
@@ -103,71 +103,55 @@
 			<version>4.0.1</version>
 		</dependency>
 		<dependency>
-			<groupId>com.squareup.okhttp3</groupId>
-			<artifactId>logging-interceptor</artifactId>
-			<version>3.12.1</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.threeten/threetenbp -->
-		<dependency>
-			<groupId>org.threeten</groupId>
-			<artifactId>threetenbp</artifactId>
-			<version>1.6.8</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/io.gsonfire/gson-fire -->
-		<dependency>
-			<groupId>io.gsonfire</groupId>
-			<artifactId>gson-fire</artifactId>
-			<version>1.9.0</version>
+			<groupId>com.batty</groupId>
+			<artifactId>service-client</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.openapitools</groupId>
-				<artifactId>openapi-generator-maven-plugin</artifactId>
-				<version>5.3.0</version>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<configuration>
+					<skipPush>${doNotPushToDHub}</skipPush>
+					<images>
+						<image>
+							<name>${docker.repo}:${version}</name>
+							<alias>dockerfile</alias>
+							<build>
+								<contextDir>${project.basedir}</contextDir>
+							</build>
+							<run>
+								<ports>
+									<port>8081:8081</port>
+								</ports>
+							</run>
+						</image>
+					</images>
+
+				</configuration>
 				<executions>
-<!--					<execution>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-						<configuration>
-							<generatorName>java</generatorName>
-							<inputSpec>service.yaml</inputSpec>
-							<configOptions>
-								<sourceFolder>src/gen/java/main</sourceFolder>
-							</configOptions>
-						</configuration>
-					</execution>-->
 					<execution>
-						<id>remote</id>
-						<phase>generate-sources</phase>
+						<id>buildDock</id>
+						<phase>post-integration-test</phase>
 						<goals>
-							<goal>generate</goal>
+							<goal>build</goal>
 						</goals>
-						<configuration>
-							<!-- specify the swagger yaml -->
-							<inputSpec>service.yaml</inputSpec>
-
-							<!-- target to generate java client code -->
-							<generatorName>java</generatorName>
-
-							<templateDirectory>${project.basedir}/templates</templateDirectory>
-							<generateApis>true</generateApis>
-							<generateModels>true</generateModels>
-							<!-- pass any necessary config options -->
-							<apiPackage>com.batty.service.api</apiPackage>
-							<generateApiTests>false</generateApiTests>
-							<generateModelTests>false</generateModelTests>
-							<modelPackage>com.batty.service.api.model</modelPackage>
-							<output>${project.build.directory}/generated-sources/remote-openapi</output>
-							<invokerPackage>com.batty.service.api.client</invokerPackage>
-						</configuration>
+					</execution>
+					<execution>
+						<id>pushDock</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>push</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>
-
-
 		</plugins>
 	</build>
 </project>

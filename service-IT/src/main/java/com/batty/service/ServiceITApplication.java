@@ -5,13 +5,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
-@Component("ServiceBean")
+@Component("ServiceITBean")
 @ComponentScan(basePackages =  "com.batty")
 @SpringBootApplication
-public class ServiceApplication {
+public class ServiceITApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ServiceApplication.class, args);
+		SpringApplication.run(ServiceITApplication.class, args);
 	}
 
 }
